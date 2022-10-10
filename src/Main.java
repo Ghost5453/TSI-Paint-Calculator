@@ -12,6 +12,7 @@ public class Main {
         int[] totalObstructionsArr;
         float[][] walls;
         float[][][] obstructions;
+        Scanner userInput = new Scanner(System.in);
 
         //Scanner userInput = new Scanner(System.in);
 
@@ -21,7 +22,7 @@ public class Main {
 
         // Number of walls
 
-        inputInt = GuardedInputInteger("How may walls do you want to paint: ", false);
+        inputInt = GuardedInputInteger("How may walls do you want to paint: ", false, userInput);
         wallNumber = inputInt;
 
         walls = new float[wallNumber][2];
@@ -32,7 +33,7 @@ public class Main {
 
         for (int myWall = 0; myWall < wallNumber; myWall++)
         {
-            for (int xy = 0; xy < 2; myWall++)
+            for (int xy = 0; xy < 2; xy++)
             {
                 if (xy ==0)
                 {
@@ -42,7 +43,7 @@ public class Main {
                     message = "What is the height of wall number: " + myWall + " in m";
                 }
 
-                inputFloat = GuardedInputFloat(message, false);
+                inputFloat = GuardedInputFloat(message, false, userInput);
                 walls[myWall][xy] = inputFloat;
             }
         }
@@ -53,7 +54,7 @@ public class Main {
         for (int myWalls = 0; myWalls < wallNumber; myWalls++)
         {
             message = "How many obstructions are there on wall number " + myWalls + " (dimensions: " + walls[myWalls][0] + " m, " + walls[myWalls][1] + " m)";
-            inputInt = GuardedInputInteger(message, true);
+            inputInt = GuardedInputInteger(message, true, userInput);
 
             if (inputInt == 0)
             {
@@ -96,14 +97,14 @@ public class Main {
                         message = "What is the height of obstruction number: " + myObstructions + " on wall number: " + myWall + " (width: " + walls[myWall][0] + " m and height: " + walls[myWall][1] + " m)";
                     }
 
-                    inputFloat = GuardedInputFloat(message, false);
+                    inputFloat = GuardedInputFloat(message, false, userInput);
                     obstructions[myWall][myObstructions][xy] = inputFloat;
                 }
             }
         }
         
         message = "What paint do you want (1: Home, 2: Dulux, or 3: Premium)";
-        inputInt = GuardedInputInteger(message, false);
+        inputInt = GuardedInputInteger(message, false, userInput);
 
         if (inputInt == 1)
         {
@@ -118,7 +119,7 @@ public class Main {
         }
 
         message = "How many coats: ";
-        inputInt = GuardedInputInteger(message, false);
+        inputInt = GuardedInputInteger(message, false, userInput);
         coats = inputInt;
         
         // correct
@@ -171,18 +172,17 @@ public class Main {
 //        return GuardedInputInteger(__message, false);
 //    }
 
-    public static float GuardedInputFloat(String _message, boolean _canBeZero)
+    public static float GuardedInputFloat(String _message, boolean _canBeZero, Scanner myInput)
     {
         boolean _error;
         float _inputFloat = 0f;
         String _input;
-        Scanner _scanner = new Scanner(System.in);
 
         do{
 
             _error = false;
             System.out.println(_message);
-            _input = _scanner.nextLine();
+            _input = myInput.nextLine();
 
             try{
                 _inputFloat = Float.valueOf(_input).floatValue();
@@ -191,40 +191,43 @@ public class Main {
                 _error = true;
                 System.out.println("Invalid input use a number");
             }
-            
-            if (_canBeZero)
+
+            if(!_error)
             {
-                if (_inputFloat < 0)
+                if (_canBeZero)
                 {
-                    System.out.println("Use a positive number");
-                    _error = true;
+                    if (_inputFloat < 0)
+                    {
+                        System.out.println("Use a positive number");
+                        _error = true;
+                        _inputFloat = -1;
+                    }
                 }
-            }else {
-                if (_inputFloat <= 0 && !_error)
+                else
                 {
-                    System.out.println("Use a positive number greater than 0");
-                    _error = true;
+                    if (_inputFloat <= 0)
+                    {
+                        System.out.println("Use a positive number greater than 0");
+                        _error = true;
+                        _inputFloat = -1;
+                    }
                 }
             }
-
         }while (_error);
-        
-        _scanner.close();
+
         return _inputFloat;
     }
 
-    public static int GuardedInputInteger(String _message, boolean _canBeZero)
+    public static int GuardedInputInteger(String _message, boolean _canBeZero, Scanner myInput)
     {
         boolean _error;
         int _inputInt = 0;
         String _input;
-        Scanner _scanner = new Scanner(System.in);
 
         do{
-
             _error = false;
             System.out.println(_message);
-            _input = _scanner.nextLine();
+            _input = myInput.nextLine();
 
             try{
                 _inputInt = Integer.valueOf(_input);
@@ -232,17 +235,32 @@ public class Main {
             {
                 _error = true;
                 System.out.println("Invalid input use a hole number");
+                _inputInt = -1;
             }
 
-            if (_inputInt <= 0 && !_error)
+            if(!_error)
             {
-                System.out.println("Use a positive number greater than 0");
-                _error = true;
+                if (_canBeZero)
+                {
+                    if (_inputInt < 0)
+                    {
+                        System.out.println("Use a positive number");
+                        _error = true;
+                        _inputInt = -1;
+                    }
+                }
+                else
+                {
+                    if (_inputInt <= 0)
+                    {
+                        System.out.println("Use a positive number greater than 0");
+                        _error = true;
+                        _inputInt = -1;
+                    }
+                }
             }
 
         }while (_error);
-        
-        _scanner.close();
         return _inputInt;
     }
 }
