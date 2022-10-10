@@ -9,7 +9,7 @@ public class Main {
         String[] dimensionsStr = new String[]{"Height in m: ", "Width in m: ", "Depth in m: "};
         float[] dimensionsFloat = new float[3];
 
-        int[] totalObstructionsArr;
+        int[] obstetricalByWall;
         float[][] walls;
         float[][][] obstructions;
         Scanner userInput = new Scanner(System.in);
@@ -27,9 +27,11 @@ public class Main {
 
         walls = new float[wallNumber][2];
         obstructions = new float[wallNumber][][];
-        totalObstructionsArr = new  int[wallNumber];
+        obstetricalByWall = new  int[wallNumber];
 
         // Wall size
+        // Add constant height
+        // Add cuboid rooms
 
         for (int myWall = 0; myWall < wallNumber; myWall++)
         {
@@ -58,22 +60,22 @@ public class Main {
 
             if (inputInt == 0)
             {
-                totalObstructionsArr[myWalls] = -1;
+                obstetricalByWall[myWalls] = -1;
             }
             else
             {
-                totalObstructionsArr[myWalls]= inputInt;
+                obstetricalByWall[myWalls]= inputInt;
             }
         }
 
         for (int myWall = 0; myWall < wallNumber; myWall++)
         {
-            if (totalObstructionsArr[myWall] == -1)
+            if (obstetricalByWall[myWall] == -1)
             {
-                obstructions = new float[wallNumber][1][1];
+                obstructions[myWall] = new float[1][1];
 
             }else {
-                obstructions = new float[wallNumber][totalObstructionsArr[myWall]][2];
+                obstructions[myWall] = new float[obstetricalByWall[myWall]][2];
             }
         }
 
@@ -82,10 +84,10 @@ public class Main {
 
         for (int myWall = 0; myWall < wallNumber; myWall++ )
         {
-            for (int myObstructions = 0; myObstructions < walls[myWall].length; myObstructions++)
-            {
-                if (totalObstructionsArr[myWall] == -1)
-                    continue;
+            int myObstructions = 0;
+            do{
+                if (obstetricalByWall[myWall] <= 0)
+                    break;
 
                 for (int xy = 0; xy < 2; xy++)
                 {
@@ -100,7 +102,11 @@ public class Main {
                     inputFloat = GuardedInputFloat(message, false, userInput);
                     obstructions[myWall][myObstructions][xy] = inputFloat;
                 }
-            }
+
+                myObstructions++;
+
+            }  while (myObstructions < obstetricalByWall[myWall]);
+
         }
         
         message = "What paint do you want (1: Home, 2: Dulux, or 3: Premium)";
@@ -134,10 +140,10 @@ public class Main {
             wallArea = walls[myWall][0] * walls[myWall][1];
             totalArea += wallArea;
 
-           if(totalObstructionsArr[myWall] == -1)
+           if(obstetricalByWall[myWall] == -1)
                continue;
 
-           for (int myObstructions = 0; myObstructions < totalObstructionsArr[myWall]; myObstructions++)
+           for (int myObstructions = 0; myObstructions < obstetricalByWall[myWall]; myObstructions++)
            {
                 obstructionArea = obstructions[myWall][myObstructions][0] * obstructions[myWall][myObstructions][1];
                 missingArea += obstructionArea;
