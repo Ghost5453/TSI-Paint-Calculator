@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        int coats, inputNum = 1;
+        int coats, inputInt;
         float m3CoveredBy1Lite = 6f, wallHeight, wallDepth, wallWith, totalPaint, totalArea, pricePerLDulux, pricePerLHome, pricePerLPremeum, paintPrice, totalPrice;
         boolean error = false;
         String input;
@@ -14,29 +14,31 @@ public class Main {
         pricePerLHome = 21f/5f;
         pricePerLPremeum = 26f;
 
-        do {
-            error = false;
+//        do {
+//            error = false;
+//
+//            System.out.println("What paint do you want (1: Home, 2: Dulux, or 3: Premium)");
+//            input = userInput.nextLine();
+//
+//            try{
+//                inputInt = Integer.valueOf(input);
+//            } catch (Exception err)
+//            {
+//                error = true;
+//                System.out.println("Invalid input ues 1, 2 or 3");
+//                inputInt = 0;
+//            }
+//
+//        } while (error);
 
-            System.out.println("What paint do you want (1: Home, 2: Dulux, or 3: Premium)");
-            input = userInput.nextLine();
+        inputInt = GuardedInt("What paint do you want (1: Home, 2: Dulux, or 3: Premium)", false, userInput);
 
-            try{
-                inputNum = Integer.valueOf(input);
-            } catch (Exception err)
-            {
-                error = true;
-                System.out.println("Invalid input ues 1, 2 or 3");
-                inputNum = 0;
-            }
-
-        } while (error);
-
-        if (inputNum == 1)
+        if (inputInt == 1)
         {
             paintPrice = pricePerLHome;
-        } else if(inputNum == 2){
+        } else if(inputInt == 2){
             paintPrice = pricePerLDulux;
-        } else if(inputNum == 3){
+        } else if(inputInt == 3){
             paintPrice = pricePerLPremeum;
         } else {
             System.out.println("Out of range input so using home paint");
@@ -103,4 +105,58 @@ public class Main {
 
         System.out.println("The cost of the paint is: £" + totalPrice);
     }
+    public static int GuardedInt(String myMessage, boolean myCanHaveZero, Scanner myInput)
+    {
+        int inputInt, testInt;
+        String input;
+        boolean error;
+
+        do{
+            error = false;
+
+            System.out.println(myMessage);
+            input = myInput.nextLine();
+
+            try {
+
+                testInt = Integer.valueOf(input);
+
+            } catch (Exception fail) {
+
+                error = true;
+                System.out.println("Invalid input type a hole number");
+                testInt = -1;
+
+            }
+
+            if (!error)
+            {
+                if (myCanHaveZero)
+                {
+                    if (testInt < 0)
+                    {
+                        System.out.println("The number cannot be negative");
+                        error = true;
+                        inputInt = -1;
+                    }
+                }else
+                {
+                    if (testInt <= 0)
+                    {
+                        System.out.println("The number must be greater than 0");
+                        error = true;
+                        inputInt = -1;
+                    }
+                }
+            }
+
+        } while (error);
+
+        inputInt = testInt;
+
+        return inputInt;
+    }
+
+
+
 }
